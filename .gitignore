@@ -1,0 +1,7 @@
+target/
+.gradle/
+__pycache__/
+*.class
+model_output/
+data/processed/*
+.env
