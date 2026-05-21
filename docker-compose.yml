@@ -1,0 +1,35 @@
+services:
+  trainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: sh -c "python scripts/preprocess.py && python scripts/train.py"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/sentiment/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000/api/v1/sentiment/predict
+    depends_on:
+      api:
+        condition: service_healthy
+    command: streamlit run src/ui.py --server.port 8501 --server.address 0.0.0.0
