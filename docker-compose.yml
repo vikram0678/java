@@ -1,12 +1,4 @@
 services:
-  trainer:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    command: sh -c "python scripts/preprocess.py && python scripts/train.py"
-
   api:
     build:
       context: .
@@ -14,7 +6,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      # Map the model files to the new folder location
+      - ./model_output:/app/model_output
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/sentiment/health"]
       interval: 10s
