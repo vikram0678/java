@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class InferenceService {
@@ -34,6 +36,7 @@ public class InferenceService {
         System.out.println(">>> SUCCESS: Model loaded with TextClassificationTranslatorFactory!");
     }
 
+    // Single prediction
     public String predict(String text) {
         try {
             Classifications classifications = predictor.predict(text);
@@ -41,6 +44,15 @@ public class InferenceService {
         } catch (Exception e) {
             return "Error during JVM inference: " + e.getMessage();
         }
+    }
+
+    // Batch prediction - processes a list of texts at once
+    public List<String> predictBatch(List<String> texts) {
+        List<String> results = new ArrayList<>();
+        for (String text : texts) {
+            results.add(predict(text));
+        }
+        return results;
     }
 
     @PreDestroy

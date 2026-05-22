@@ -1,7 +1,7 @@
 # Model binary files - too large for GitHub (>100MB)
 model_output/*.pt
 model_output/*.safetensors
-
+model_output/
 # Python
 __pycache__/
 *.pyc
