@@ -1,7 +1,18 @@
-target/
-.gradle/
+# Model binary files - too large for GitHub (>100MB)
+model_output/*.pt
+model_output/*.safetensors
+
+# Python
 __pycache__/
+*.pyc
+pyenv/
+data/
+
+# Java
+target/
 *.class
-model_output/
-data/processed/*
-.env
+
+# IDE
+.idea/
+*.iml
+.vscode/

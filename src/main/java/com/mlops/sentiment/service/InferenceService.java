@@ -4,6 +4,7 @@ import ai.djl.inference.Predictor;
 import ai.djl.modality.Classifications;
 import ai.djl.repository.zoo.Criteria;
 import ai.djl.repository.zoo.ZooModel;
+import ai.djl.huggingface.translator.TextClassificationTranslatorFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
@@ -21,18 +22,16 @@ public class InferenceService {
 
     @PostConstruct
     public void init() throws Exception {
-        // We configure DJL to explicitly handle HuggingFace Safetensors 
         Criteria<String, Classifications> criteria = Criteria.builder()
                 .setTypes(String.class, Classifications.class)
                 .optModelPath(Paths.get(modelPath))
                 .optEngine("PyTorch")
-                // This option forces DJL to look for the model.safetensors file instead of a .pt file
-                .optArgument("model_type", "safetensors") 
+                .optTranslatorFactory(new TextClassificationTranslatorFactory())
                 .build();
-                
+
         this.model = criteria.loadModel();
         this.predictor = model.newPredictor();
-        System.out.println(">>> SUCCESS: Real model.safetensors loaded into Java JVM memory!");
+        System.out.println(">>> SUCCESS: Model loaded with TextClassificationTranslatorFactory!");
     }
 
     public String predict(String text) {

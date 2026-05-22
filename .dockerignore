@@ -1,0 +1,8 @@
+model_output/
+data/
+pyenv/
+__pycache__/
+*.pt
+*.safetensors
+*.py
+.git/
